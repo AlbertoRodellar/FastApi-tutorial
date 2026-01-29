@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 
 # Iniciar servidor: uvicorn users:app --reload
@@ -43,10 +43,11 @@ async def user(id: int):
 
 
 # Crea nuevo usuario en la array
-@app.post("/user/")
+@app.post("/user/", response_model=User, status_code=201)
 async def create_user(user: User):
     if type(search_user(user.id)) == User:
-        return {"error": "Usuario con ese id ya existe"}
+        raise HTTPException(status_code=400, detail="Usuario ya existe")
+    
     users_list.append(user)
     return user
 
@@ -60,7 +61,7 @@ async def update_user(user: User):
             found = True
 
     if not found:
-        return {"error": "No se ha actualizado usuario"}
+        raise HTTPException(status_code=404, detail="Usuario no encontrado")
     return user
 
 # Elimina usuario de la array
@@ -73,7 +74,7 @@ async def delete_user(id: int):
             found = True
 
     if not found:
-        return {"error": "No se ha eliminado usuario"}
+                raise HTTPException(status_code=404, detail="Usuario no encontrado")
     return {"mensaje": f"Usuario con id: {id} borrado"}
 
 
@@ -83,3 +84,4 @@ def search_user(id: int):
         return list(users)[0]
     except:
         return {"error": "No se ha encontrado usuario"}
+    
