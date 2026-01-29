@@ -4,7 +4,6 @@ app = FastAPI()
 
 # Iniciar servidor: uvicorn main:app --reload
 
-
 @app.get("/")
 async def root():
     return {"message": "Hello World"}
