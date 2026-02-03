@@ -80,6 +80,6 @@ async def login(form: OAuth2PasswordRequestForm = Depends()):
     return {"access_token": user.username, "token_type": "bearer"}
 
 # Esta funcion "me" depende de lo que diga la otra funcion "current_user"
-@router.get("/users/me")
+@router.get("/users-auth/me")
 async def me(user: User = Depends(current_user)):
     return user
